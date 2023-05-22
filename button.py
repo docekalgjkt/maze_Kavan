@@ -19,6 +19,7 @@ class Place_robot:
     def __init__(self):
         self.input_x = None
         self.input_y = None
+        self.coords = None
         self.place_robot = Tk()
         self.place_robot.geometry("200x200")
         canvas = Canvas(self.place_robot, width = 200, height = 40)
