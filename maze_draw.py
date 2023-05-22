@@ -40,6 +40,7 @@ class Maze:
     def place_robot(self):
         get_coords = Place_robot().robot_coords()
         print(get_coords)
+        Place_robot.Destroy
         
         
 

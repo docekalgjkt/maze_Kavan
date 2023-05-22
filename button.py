@@ -36,11 +36,15 @@ class Place_robot:
         y_position.place(x = 20, y = 90, width = 70, height = 20)
         enter_button = Button(self.place_robot, text = "Enter", command = self.if_enter_pressed)
         enter_button.place(x = 80, y = 150, width = 40, height = 20)
-        return self.coords
-        
+        if self.input_x.get() != "" and self.input_y.get() != "":
+            return int(self.input_x.get()), int(self.input_y.get())
+    
     def if_enter_pressed(self):
+        print(self.input_x.get())
+        print(self.input_y.get())
         if self.input_x.get() == "" or self.input_y.get() == "":
             txt = Label(self.place_robot, text = "Please, enter the starting position !", fg = "red")
             txt.place(x = 10, y = 180, width = 180, height = 20)
-        else:
-            self.coords = [int(self.input_x.get()), int(self.input_y.get())]
+
+    def Destroy(self):
+        self.place_robot.destroy()
