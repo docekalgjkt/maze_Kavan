@@ -20,6 +20,7 @@ class Place_robot:
         self.input_x = None
         self.input_y = None
         self.coords = None
+        self.pressed = False
         self.place_robot = Tk()
         self.place_robot.geometry("200x200")
         canvas = Canvas(self.place_robot, width = 200, height = 40)
@@ -36,15 +37,19 @@ class Place_robot:
         y_position.place(x = 20, y = 90, width = 70, height = 20)
         enter_button = Button(self.place_robot, text = "Enter", command = self.if_enter_pressed)
         enter_button.place(x = 80, y = 150, width = 40, height = 20)
-        if self.input_x.get() != "" and self.input_y.get() != "":
-            return int(self.input_x.get()), int(self.input_y.get())
+        if self.pressed == True:
+            input_X = int(self.input_x.get())
+            input_Y = int(self.input_y.et())
+            return input_X, input_Y
+        else:
+            self.place_robot.mainloop()
+    
+       
     
     def if_enter_pressed(self):
-        print(self.input_x.get())
-        print(self.input_y.get())
         if self.input_x.get() == "" or self.input_y.get() == "":
             txt = Label(self.place_robot, text = "Please, enter the starting position !", fg = "red")
             txt.place(x = 10, y = 180, width = 180, height = 20)
-
-    def Destroy(self):
-        self.place_robot.destroy()
+        else:
+            self.pressed = True
+            return self.pressed
