@@ -9,5 +9,4 @@ class Translator:
         for line in lines:
             list(line)
         return lines
-
-Translator(r"C:\Users\Administrator\Desktop\pogromování\VS code\text_line")
+Translator(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\text_line.txt")
