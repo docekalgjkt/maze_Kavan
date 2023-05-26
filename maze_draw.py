@@ -1,9 +1,6 @@
-import maze_readline
+import Translator
 from button import *
 from tkinter import *
-
-maze = maze_readline.returnmaze()
-list(maze)
 
 class Maze:
     def __init__(self):  
@@ -38,8 +35,11 @@ class Maze:
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
 
     def place_robot(self):
-        get_coords = Place_robot().robot_coords()
-        print(get_coords)
+        pass
+
+
+        
+        
         
         
         

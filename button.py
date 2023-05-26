@@ -10,10 +10,13 @@ class Choose_level:
         self.choose_lvl.geometry("150x300")
         canvas = Canvas(self.choose_lvl, width = 150, height = 50)
         canvas.pack()
-        for i in range(1, 8):
+        for i in range(1, 4):
             name = "level {}".format(i)
-            button = Button(self.choose_lvl, text = str(name))
+            button = Button(self.choose_lvl, text = str(name), command = self.load_level)
             button.pack(side = "top")
+
+    def load_level(self):
+        pass
 
 class Place_robot:
     def __init__(self):
@@ -39,10 +42,9 @@ class Place_robot:
         enter_button.place(x = 80, y = 150, width = 40, height = 20)
         if self.pressed == True:
             input_X = int(self.input_x.get())
-            input_Y = int(self.input_y.et())
-            return input_X, input_Y
-        else:
-            self.place_robot.mainloop()
+            input_Y = int(self.input_y.get())
+            return [input_X, input_Y]
+        self.place_robot.mainloop()
     
        
     
