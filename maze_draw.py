@@ -15,11 +15,6 @@ class Maze:
         self.canvas.pack()
         start_program_button = Button(self.window, text = "Start_program", bg = "red")
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
-        self.place_robot()
-        self.window.mainloop()
-    
-
-    def place_robot(self):
         x = Label(self.window, text = "x position")
         y = Label(self.window, text = "y position")
         x.place(x = 540, y = 200, width = 80, height = 20)
@@ -30,6 +25,8 @@ class Maze:
         self.input_y.place(x = 640, y = 240, width = 40, height = 20)
         button = Button(self.window, text = "Enter", command = self.create_robot)
         button.place(x = 720, y = 220, width = 40, height = 20)
+        lvl_button = Button(self.window, text = "Select Level", command = self.select_lvl)
+        lvl_button.place(x = 560, y = 50, width = 210, height = 100)
         self.window.mainloop()
             
     def create_robot(self):
@@ -37,13 +34,22 @@ class Maze:
             x = int(self.input_x.get())
             y = int(self.input_y.get())+1
             self.canvas.create_oval(20*x, 20*y, 20*x+20, 20*y+20)
+    def select_lvl(self):
+        self.Lvl_1 = Button(self.window, text = "Level 1", command = self.draw_level_1)
+        self.Lvl_1.place(x = 225,y = 30, width = 100, height = 50)
+        self.Lvl_2 = Button(self.window, text = "Level 2", command = self.draw_level_2)
+        self.Lvl_2.place(x = 225, y = 110, width = 100, height = 50)
+        self.Lvl_3 = Button(self.window, text = "Level 3", command = self.draw_level_3)
+        self.Lvl_3.place(x = 225, y = 190, width = 100, height = 50)
+        self.window.mainloop()
         
-        
+    def draw_level_1(self):
+        pass
 
-        
-        
-        
-        
-        
+    def draw_level_2(self):
+        pass
+
+    def draw_level_3(self):
+        pass
 
 Maze()
