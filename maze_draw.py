@@ -1,5 +1,6 @@
-import Translator
+from Translator import *
 from tkinter import *
+from ast import literal_eval
 
 class Maze:
     def __init__(self):  
@@ -44,7 +45,25 @@ class Maze:
         self.window.mainloop()
         
     def draw_level_1(self):
-        pass
+        self.Lvl_1.destroy()
+        self.Lvl_2.destroy()
+        self.Lvl_3.destroy()
+        lvl = Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt")
+        for i in range(len(lvl)):
+            print(len(lvl))
+            print(lvl[0])
+            literal_eval(lvl[0])
+            list(lvl[0])
+            print(len(lvl[0]))
+        
+            print(len(lvl[0]))
+            for j in range(len(lvl[0])):
+                self.canvas.create_rectangle(170+(40*(j)), 145+(40*(j)),170+(40 *(i+1)),185+(40*(i+1)))
+        for line in lvl:
+            for num in line:
+                if num != 0:
+                    if num == 1:
+                        pass
 
     def draw_level_2(self):
         pass
