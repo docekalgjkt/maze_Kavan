@@ -1,10 +1,9 @@
 class Translator:
     def return_maze(self, doc):
         script = open(doc)
-        level = script.readlines()
         lines = []
+        level = script.readlines()
         for line in level:
-            line.split(",")
             lines.append(line)
         for line in lines:
             list(line)

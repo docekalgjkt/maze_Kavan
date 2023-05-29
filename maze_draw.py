@@ -8,15 +8,18 @@ class Maze:
         self.width = 500
         self.height = 600
         self.robot = None
+        self.warning_txt = None
+        self.welcome = None
         self.create_window()
 
     def create_window(self):
+        #create window interface
         self.window = Tk()
         self.window.geometry("800x450")
         self.window.title("Maze")
         self.canvas = Canvas(self.window, width = self.width, height = self.height)
         self.canvas.pack(side = LEFT)
-        start_program_button = Button(self.window, text = "Start_program", bg = "red")
+        start_program_button = Button(self.window, text = "Start program", bg = "red")
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
         x = Label(self.window, text = "x position")
         y = Label(self.window, text = "y position")
@@ -30,22 +33,51 @@ class Maze:
         button.place(x = 720, y = 220, width = 40, height = 20)
         lvl_button = Button(self.window, text = "Select Level", command = self.select_lvl)
         lvl_button.place(x = 560, y = 50, width = 210, height = 100)
+        #create welcome text
+        if self.welcome == None:
+            self.welcome = self.canvas.create_text(250, 200, text = "WELCOME TO THE MAZE\n To begin, choose level\n then place your robot\n and finally press start!")
         self.window.mainloop()
             
     def create_robot(self):
+        #checks if you can place robot and create it
+        if self.warning_txt != None:
+            self.warning_txt.destroy()
         if self.robot != None:
              self.canvas.delete(self.robot)
         if self.input_x.get()!= "" and self.input_y.get() != "":
             x = int(self.input_x.get())-1
             y = int(self.input_y.get())-1
             if self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt"):
-                self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
+                if self.lvl[y][x] == "0":
+                    self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
+                elif self.lvl[y][x] == "1":
+                    self.warning_txt = Label(self.window, text = "Please, do not put player on walls", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40) 
+                elif self.lvl[y][x] == "2":
+                    self.warning_txt = Label(self.window, text = "Do not choose the exit, please", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40)
             elif self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_2.txt"):
-                self.robot = self.canvas.create_oval((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill ="blue")
+                if self.lvl[y][x] == "0":
+                    self.robot = self.canvas.create_oval((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill ="blue")
+                elif self.lvl[y][x] == "1":
+                    self.warning_txt = Label(self.window, text = "Please, do not put player on walls", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40)
+                elif self.lvl[y][x] == "2":
+                    self.warning_txt = Label(self.window, text = "Do not choose the exit, please", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40)
             else:
-                self.robot = self.canvas.create_oval((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "blue")
+                if self.lvl[y][x] == "0":
+                    self.robot = self.canvas.create_oval((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "blue")               
+                elif self.lvl[y][x] == "1":
+                    self.warning_txt = Label(self.window, text = "Please, do not put player on walls", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40) 
+                elif self.lvl[y][x] == "2":
+                    self.warning_txt = Label(self.window, text = "Do not choose the exit, please", fg = "red")
+                    self.warning_txt.place(x=560,y=260, width = 200, height = 40)
+                
              
     def select_lvl(self):
+        #create lvl buttons
         self.canvas.delete("all")
         self.Lvl_1 = Button(self.window, text = "Level 1", command = self.draw_level_1)
         self.Lvl_1.place(x = 225,y = 30, width = 100, height = 50)
