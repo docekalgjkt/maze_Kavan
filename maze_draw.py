@@ -35,6 +35,8 @@ class Maze:
         button.place(x = 720, y = 220, width = 40, height = 20)
         lvl_button = Button(self.window, text = "Select Level", command = self.select_lvl)
         lvl_button.place(x = 560, y = 50, width = 210, height = 100)
+        exit = Button(self.window, text = "Exit", command = self.window.destroy)
+        exit.place(x = 630, y = 420, width = 70, height = 20)
         #create welcome text
         if self.welcome == None:
             self.welcome = self.canvas.create_text(250, 200, text = "WELCOME TO THE MAZE\n To begin, choose level\n then place your robot\n and finally press start!")
