@@ -1,19 +1,20 @@
 from Translator import *
 from tkinter import *
-from ast import literal_eval
 
 class Maze:
     def __init__(self):  
         self.canvas = None
-        self.window = None  
+        self.window = None 
+        self.width = 500
+        self.height = 600
         self.create_window()
 
     def create_window(self):
         self.window = Tk()
         self.window.geometry("800x450")
         self.window.title("Maze")
-        self.canvas = Canvas(self.window, width = 800, height = 450)
-        self.canvas.pack()
+        self.canvas = Canvas(self.window, width = self.width, height = self.height)
+        self.canvas.pack(side = LEFT)
         start_program_button = Button(self.window, text = "Start_program", bg = "red")
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
         x = Label(self.window, text = "x position")
@@ -36,6 +37,7 @@ class Maze:
             y = int(self.input_y.get())+1
             self.canvas.create_oval(20*x, 20*y, 20*x+20, 20*y+20)
     def select_lvl(self):
+        self.canvas.delete("all")
         self.Lvl_1 = Button(self.window, text = "Level 1", command = self.draw_level_1)
         self.Lvl_1.place(x = 225,y = 30, width = 100, height = 50)
         self.Lvl_2 = Button(self.window, text = "Level 2", command = self.draw_level_2)
@@ -49,24 +51,38 @@ class Maze:
         self.Lvl_2.destroy()
         self.Lvl_3.destroy()
         lvl = Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt")
-        for i in range(len(lvl)):
-            print(len(lvl))
-            print(lvl[0])
-            literal_eval(lvl[0])
-            list(lvl[0])
-            print(len(lvl[0]))
-        
-            print(len(lvl[0]))
-            for j in range(len(lvl[0])):
-                self.canvas.create_rectangle(170+(40*(j)), 145+(40*(j)),170+(40 *(i+1)),185+(40*(i+1)))
-        for line in lvl:
-            for num in line:
-                if num != 0:
-                    if num == 1:
-                        pass
+        for y in range(len(lvl)):
+                x = 0
+                line = lvl[y]
+                for num in line:
+                    if num == "0":
+                        self.canvas.create_rectangle((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120)
+                        x += 1
+                    if num == "1":
+                        self.canvas.create_rectangle((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "black")
+                        x += 1
+                    if num == "2":
+                        self.canvas.create_rectangle((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120,fill = "red")
+                        x += 1
 
     def draw_level_2(self):
-        pass
+        self.Lvl_1.destroy()
+        self.Lvl_2.destroy()
+        self.Lvl_3.destroy()
+        lvl = Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_2.txt")
+        for y in range(len(lvl)):
+                x = 0
+                line = lvl[y]
+                for num in line:
+                    if num == "0":
+                        self.canvas.create_rectangle((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80)
+                        x += 1
+                    if num == "1":
+                        self.canvas.create_rectangle((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill = "black")
+                        x += 1
+                    if num == "2":
+                        self.canvas.create_rectangle((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80,fill = "red")
+                        x += 1
 
     def draw_level_3(self):
         pass
