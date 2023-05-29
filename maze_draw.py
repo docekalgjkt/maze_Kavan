@@ -85,6 +85,22 @@ class Maze:
                         x += 1
 
     def draw_level_3(self):
-        pass
+        self.Lvl_1.destroy()
+        self.Lvl_2.destroy()
+        self.Lvl_3.destroy()
+        lvl = Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_3.txt")
+        for y in range(len(lvl)):
+                x = 0
+                line = lvl[y]
+                for num in line:
+                    if num == "0":
+                        self.canvas.create_rectangle((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30)
+                        x += 1
+                    if num == "1":
+                        self.canvas.create_rectangle((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "black")
+                        x += 1
+                    if num == "2":
+                        self.canvas.create_rectangle((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30,fill = "red")
+                        x += 1
 
 Maze()
