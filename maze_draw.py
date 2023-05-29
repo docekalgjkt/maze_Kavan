@@ -19,10 +19,12 @@ class Maze:
         self.window.title("Maze")
         self.canvas = Canvas(self.window, width = self.width, height = self.height)
         self.canvas.pack(side = LEFT)
-        start_program_button = Button(self.window, text = "Start program", bg = "red")
+        start_program_button = Button(self.window, text = "Start program", bg = "red", command = self.find_way)
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
         x = Label(self.window, text = "x position")
         y = Label(self.window, text = "y position")
+        place_robot_txt = Label(self.window, text = "Place robot:", fg = "red")
+        place_robot_txt.place(x = 540, y = 160, width = 80, height = 40)
         x.place(x = 540, y = 200, width = 80, height = 20)
         y.place(x = 540, y = 240, width = 80, height = 20)
         self.input_x = Entry(self.window)
@@ -143,5 +145,7 @@ class Maze:
                     if num == "2":
                         self.canvas.create_rectangle((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30,fill = "red")
                         x += 1
+    def find_way(self):
+        pass
 
 Maze()
