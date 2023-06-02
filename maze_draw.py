@@ -1,5 +1,6 @@
 from Translator import *
 from tkinter import *
+from Tree import *
 
 class Maze:
     def __init__(self):  
@@ -10,6 +11,8 @@ class Maze:
         self.robot = None
         self.warning_txt = None
         self.welcome = None
+        self.quad_tree = []
+        self.place_error = None
         self.create_window()
 
     def create_window(self):
@@ -19,7 +22,7 @@ class Maze:
         self.window.title("Maze")
         self.canvas = Canvas(self.window, width = self.width, height = self.height)
         self.canvas.pack(side = LEFT)
-        start_program_button = Button(self.window, text = "Start program", bg = "red", command = self.find_way)
+        start_program_button = Button(self.window, text = "Start program", bg = "red", command = self.call_way)
         start_program_button.place(x = 550, y = 300, width = 230, height = 100)
         x = Label(self.window, text = "x position")
         y = Label(self.window, text = "y position")
@@ -147,7 +150,16 @@ class Maze:
                     if num == "2":
                         self.canvas.create_rectangle((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30,fill = "red")
                         x += 1
-    def find_way(self):
-        pass
+    
+    def call_way(self):
+        i = 1
+        if self.place_error != None:
+            self.place_error.destroy()
+        self.find_way(int(self.input_x.get()), int(self.input_y.get()))
+
+    def find_way(self, x, y):
+        if self.lvl[y][x] == "2":
+            pass
+        
 
 Maze()
