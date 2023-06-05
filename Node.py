@@ -9,7 +9,3 @@ class Node:
         self.way_left = None
         self.way_right = None   
 
-class QuadTree:
-    def __init__(self):
-        self.memory = []
-        self.stack = []

@@ -1,6 +1,6 @@
 from Translator import *
 from tkinter import *
-from Tree import *
+from Node import *
 
 class Maze:
     def __init__(self):  
@@ -11,8 +11,9 @@ class Maze:
         self.robot = None
         self.warning_txt = None
         self.welcome = None
-        self.quad_tree = []
         self.place_error = None
+        self.memory = []
+        self.exit_coords = None
         self.create_window()
 
     def create_window(self):
@@ -152,14 +153,72 @@ class Maze:
                         x += 1
     
     def call_way(self):
-        i = 1
-        if self.place_error != None:
-            self.place_error.destroy()
-        self.find_way(int(self.input_x.get()), int(self.input_y.get()))
+        y = 0
+        for i in self.lvl:
+            x = 0
+            for j in i:
+                if j == "2":
+                    self.exit_coords = [x,y]
+            y += 1
+        iterator = 1
+        self.find_way([int(self.input_x.get()),int(self.input_y.get())], iterator)
 
-    def find_way(self, x, y):
-        if self.lvl[y][x] == "2":
-            pass
+    def find_way(self, indexes, iterator):
+        x = indexes[0]
+        y = indexes[1]
+        if iterator == 1:
+            x -= 1
+            y -= 1
+        position = Node(indexes)
+        if self.exit_coords != [x,y]:
+            if 0 <= x-1 < len(self.lvl[y]) and self.lvl[y][x-1] != "1":
+                position.way_left = [x-1,y]
+            if 0 <= x+1 < len(self.lvl[y]) and self.lvl[y][x+1] != "1":
+                position.way_right = [x+1,y]
+            if 0 <= y+1 < len(self.lvl) and self.lvl[y+1][x] != "1":
+                position.way_down = [x, y+1]
+            if 0 <= y-1 < len(self.lvl) and self.lvl[y-1][x] != "1":
+                position.way_top = [x,y-1]
+            self.memory.append(position)
+            iterator += 1
+            walkables = [position.way_left, position.way_right, position.way_down, position.way_top]
+            for way in walkables:
+                if way != None:
+                    self.find_way(way, iterator)
         
+
+        '''
+        x = indexes[0]
+        y = indexes[1]
+        if iterator == 1:
+            x -= 1
+            y -= 1
+        if 0 <= y < len(self.lvl) and 0 <= x < len(self.lvl[y]) and self.exit_coords not in self.walkable:
+            self.around = []
+            if [x,y] not in self.walkable:
+                self.walkable.append([x,y])
+            if 0 <= x-1 < len(self.lvl[y]) and [x-1,y] not in self.walkable and self.lvl[y][x-1] != "1":
+                self.walkable.append([x-1,y])
+                self.around.append([x-1,y])
+            if  0 <= x+1 < len(self.lvl[y]) and [x+1,y] not in self.walkable and self.lvl[y][x+1] != "1":
+                self.walkable.append([x+1, y])
+                self.around.append([x+1,y])
+            if 0 <= y-1 < len(self.lvl) and [x,y-1] not in self.walkable and self.lvl[y-1][x] != "1":
+                self.walkable.append([x, y-1])
+                self.around.append([x,y-1])
+            if 0 <= y+1 < len(self.lvl) and [x,y+1] not in self.walkable and self.lvl[y+1][x] != "1":
+                self.walkable.append([x, y+1])
+                self.around.append([x, y+1])
+            print(self.around)
+            print(self.walkable)
+            iterator += 1
+            for i in self.around:
+                self.find_way(i, iterator)
+            '''
+        
+
+
+            
+            
 
 Maze()
