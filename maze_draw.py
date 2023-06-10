@@ -13,6 +13,7 @@ class Maze:
         self.blind = []
         self.warning_txt = None
         self.place_error = None
+        self.walked = []
         self.create_window()
 
     def create_window(self):
@@ -22,8 +23,8 @@ class Maze:
         self.window.title("Maze")
         self.canvas = Canvas(self.window, width = self.width, height = self.height)
         self.canvas.pack(side = LEFT)
-        start_program_button = Button(self.window, text = "Start program", bg = "red", command = self.call_way)
-        start_program_button.place(x = 550, y = 300, width = 230, height = 100)
+        self.start_program_button = Button(self.window, text = "Start program", bg = "red", command = self.call_way)
+        self.start_program_button.place(x = 550, y = 300, width = 230, height = 100)
         x = Label(self.window, text = "x position")
         y = Label(self.window, text = "y position")
         place_robot_txt = Label(self.window, text = "Place robot:", fg = "red")
@@ -34,12 +35,12 @@ class Maze:
         self.input_y = Entry(self.window)
         self.input_x.place(x = 640, y = 200, width = 40, height = 20)
         self.input_y.place(x = 640, y = 240, width = 40, height = 20)
-        button = Button(self.window, text = "Enter", command = self.create_robot)
-        button.place(x = 720, y = 220, width = 40, height = 20)
-        lvl_button = Button(self.window, text = "Select Level", command = self.select_lvl)
-        lvl_button.place(x = 560, y = 50, width = 210, height = 100)
-        exit = Button(self.window, text = "Exit", command = self.window.destroy)
-        exit.place(x = 630, y = 420, width = 70, height = 20)
+        self.button = Button(self.window, text = "Enter", command = self.create_robot)
+        self.button.place(x = 720, y = 220, width = 40, height = 20)
+        self.lvl_button = Button(self.window, text = "Select Level", command = self.select_lvl)
+        self.lvl_button.place(x = 560, y = 50, width = 210, height = 100)
+        self.exit = Button(self.window, text = "Exit", command = self.window.destroy)
+        self.exit.place(x = 630, y = 420, width = 70, height = 20)
         self.window.mainloop()
             
     def create_robot(self):
@@ -49,8 +50,14 @@ class Maze:
         if self.robot != None:
              self.canvas.delete(self.robot)
         if self.input_x.get()!= "" and self.input_y.get() != "":
-            x = int(self.input_x.get())-1
-            y = int(self.input_y.get())-1
+            if int(self.input_x.get()) != 0:
+                x = int(self.input_x.get())-1
+            else:
+                x = int(self.input_x.get())
+            if int(self.input_y.get()) != 0:
+                y = int(self.input_y.get())-1
+            else:
+                y = int(self.input_y.get())
             if self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt"):
                 if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
@@ -153,6 +160,10 @@ class Maze:
         self.find_way([int(self.input_x.get())-1, int(self.input_y.get())-1],[int(self.input_x.get())-1, int(self.input_y.get())-1])
 
     def find_way(self, position, start):
+        for i in range(len(self.lvl)):
+            for y in range(len(self.lvl[i])):
+                if self.lvl[i][y] == "2":
+                    self.end = [y,i]
         x = position[0]
         y = position[1]
         begin_pos = start
@@ -166,12 +177,12 @@ class Maze:
                     self.way.append(pos)
                 pos = self.memory.pop()
             self.way.append(pos)
-            return self.go_robot(self.way)
+            return self.go_robot()
         for i in [-1,1]:
-            if x == 0 and i == -1 or x == len(self.lvl[y])-1 and i == 1:
-                continue
-            elif self.lvl[y][x+i] != "1" and [x+i,y] not in self.memory:
-                around.append([x+i,y])
+                if x == 0 and i == -1 or x == len(self.lvl[y])-1 and i == 1:
+                    continue
+                if self.lvl[y][x+i] != "1" and [x+i,y] not in self.memory:
+                    around.append([x+i,y])           
         for j in [-1,1]:
             if y == 0 and j == -1 or y == len(self.lvl)-1 and j == 1:
                 continue
@@ -184,22 +195,66 @@ class Maze:
                 self.memory.append(way)
                 self.find_way(way, begin_pos)
 
-    def move_robot(self, x, y):
+    def walk(self,way):
+        x = way[0]
+        y = way[1]
+        prev_pos = self.walked.pop(0)
         if self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt"):
-            self.canvas.delete(self.robot)
-            self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
-            self.way.pop()
+            if prev_pos[0] == x:
+                x = 0
+                y = 1
+                self.canvas.move(self.robot,40*x, 40*y)
+                self.window.update()
+            elif prev_pos[1] == y:
+                y = 0
+                x = 1
+                self.canvas.move(self.robot, 40*x,40*y)
+                self.window.update()
         elif self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_2.txt"):
-            self.canvas.delete(self.robot)
-            self.robot = self.canvas.create_oval((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill ="blue")
-            self.way.pop()
-    def go_robot(self, way):
+            if prev_pos[0] == x:
+                x = 0
+                y = 1
+                self.canvas.move(self.robot, 40*x, 40*y)
+                self.window.update()
+            elif prev_pos[1] == y:
+                if x <= prev_pos[0]:
+                    x = -1
+                else:
+                    x = 1
+                y = 0
+                self.canvas.move(self.robot,40*x, 40*y)
+                self.window.update()
+        else:
+            if prev_pos[0] == x:
+                x = 0
+                y = 1
+                self.canvas.move(self.robot, 40*x, 40*y)
+                self.window.update()
+            elif prev_pos[1] == y:
+                if x <= prev_pos[0]:
+                    x = -1
+                else:
+                    x = 1
+                y = 0
+                self.canvas.move(self.robot, 40*x,40*y)
+                self.window.update()
+        
+
+    def go_robot(self):
         #disable buttons -> need to do
+        self.start_program_button["state"] = DISABLED
+        self.button["state"] = DISABLED
+        self.exit["state"] = DISABLED
+        self.lvl_button["state"] = DISABLED
         #checks if it is walkable -> need to do
-        x = way[0][0]
-        y = way[1][1]
-        self.window.after(1000, self.move_robot(int(x), int(y)))
-            
-            
+        self.way.reverse()
+        try:
+            while self.way[0][0] != self.end:
+                self.walked.append(self.way[0])
+                self.way.pop(0)
+                print(self.way)
+                self.window.after(1000, self.walk(self.way[0]))
+        except IndexError:
+            pass
 
 Maze()
