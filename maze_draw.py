@@ -1,6 +1,5 @@
 from Translator import *
 from tkinter import *
-from Node import *
 
 class Maze:
     def __init__(self):  
@@ -9,11 +8,11 @@ class Maze:
         self.width = 500
         self.height = 600
         self.robot = None
-        self.warning_txt = None
-        self.welcome = None
-        self.place_error = None
         self.memory = []
-        self.exit_coords = None
+        self.way = []
+        self.blind = []
+        self.warning_txt = None
+        self.place_error = None
         self.create_window()
 
     def create_window(self):
@@ -41,9 +40,6 @@ class Maze:
         lvl_button.place(x = 560, y = 50, width = 210, height = 100)
         exit = Button(self.window, text = "Exit", command = self.window.destroy)
         exit.place(x = 630, y = 420, width = 70, height = 20)
-        #create welcome text
-        if self.welcome == None:
-            self.welcome = self.canvas.create_text(250, 200, text = "WELCOME TO THE MAZE\n To begin, choose level\n then place your robot\n and finally press start!")
         self.window.mainloop()
             
     def create_robot(self):
@@ -87,6 +83,7 @@ class Maze:
     def select_lvl(self):
         #create lvl buttons
         self.canvas.delete("all")
+        self.lvl = None
         self.Lvl_1 = Button(self.window, text = "Level 1", command = self.draw_level_1)
         self.Lvl_1.place(x = 225,y = 30, width = 100, height = 50)
         self.Lvl_2 = Button(self.window, text = "Level 2", command = self.draw_level_2)
@@ -153,71 +150,55 @@ class Maze:
                         x += 1
     
     def call_way(self):
-        y = 0
-        for i in self.lvl:
-            x = 0
-            for j in i:
-                if j == "2":
-                    self.exit_coords = [x,y]
-            y += 1
-        iterator = 1
-        self.find_way([int(self.input_x.get()),int(self.input_y.get())], iterator)
+        self.find_way([int(self.input_x.get())-1, int(self.input_y.get())-1],[int(self.input_x.get())-1, int(self.input_y.get())-1])
 
-    def find_way(self, indexes, iterator):
-        x = indexes[0]
-        y = indexes[1]
-        if iterator == 1:
-            x -= 1
-            y -= 1
-        position = Node(indexes)
-        if self.exit_coords != [x,y]:
-            if 0 <= x-1 < len(self.lvl[y]) and self.lvl[y][x-1] != "1":
-                position.way_left = [x-1,y]
-            if 0 <= x+1 < len(self.lvl[y]) and self.lvl[y][x+1] != "1":
-                position.way_right = [x+1,y]
-            if 0 <= y+1 < len(self.lvl) and self.lvl[y+1][x] != "1":
-                position.way_down = [x, y+1]
-            if 0 <= y-1 < len(self.lvl) and self.lvl[y-1][x] != "1":
-                position.way_top = [x,y-1]
+    def find_way(self, position, start):
+        x = position[0]
+        y = position[1]
+        begin_pos = start
+        if position == begin_pos:
             self.memory.append(position)
-            iterator += 1
-            walkables = [position.way_left, position.way_right, position.way_down, position.way_top]
-            for way in walkables:
-                if way != None:
-                    self.find_way(way, iterator)
-        
+        around = []
+        if self.lvl[y][x] == "2":
+            pos = self.memory.pop()
+            while pos != begin_pos:
+                if pos not in self.blind:
+                    self.way.append(pos)
+                pos = self.memory.pop()
+            self.way.append(pos)
+            return self.go_robot(self.way)
+        for i in [-1,1]:
+            if x == 0 and i == -1 or x == len(self.lvl[y])-1 and i == 1:
+                continue
+            elif self.lvl[y][x+i] != "1" and [x+i,y] not in self.memory:
+                around.append([x+i,y])
+        for j in [-1,1]:
+            if y == 0 and j == -1 or y == len(self.lvl)-1 and j == 1:
+                continue
+            elif self.lvl[y+j][x] != "1" and [x,y+j] not in self.memory:
+                around.append([x,y+j])
+        if around == []:
+            self.blind.append(position) 
+        for way in around:
+            if way not in self.memory:
+                self.memory.append(way)
+                self.find_way(way, begin_pos)
 
-        '''
-        x = indexes[0]
-        y = indexes[1]
-        if iterator == 1:
-            x -= 1
-            y -= 1
-        if 0 <= y < len(self.lvl) and 0 <= x < len(self.lvl[y]) and self.exit_coords not in self.walkable:
-            self.around = []
-            if [x,y] not in self.walkable:
-                self.walkable.append([x,y])
-            if 0 <= x-1 < len(self.lvl[y]) and [x-1,y] not in self.walkable and self.lvl[y][x-1] != "1":
-                self.walkable.append([x-1,y])
-                self.around.append([x-1,y])
-            if  0 <= x+1 < len(self.lvl[y]) and [x+1,y] not in self.walkable and self.lvl[y][x+1] != "1":
-                self.walkable.append([x+1, y])
-                self.around.append([x+1,y])
-            if 0 <= y-1 < len(self.lvl) and [x,y-1] not in self.walkable and self.lvl[y-1][x] != "1":
-                self.walkable.append([x, y-1])
-                self.around.append([x,y-1])
-            if 0 <= y+1 < len(self.lvl) and [x,y+1] not in self.walkable and self.lvl[y+1][x] != "1":
-                self.walkable.append([x, y+1])
-                self.around.append([x, y+1])
-            print(self.around)
-            print(self.walkable)
-            iterator += 1
-            for i in self.around:
-                self.find_way(i, iterator)
-            '''
-        
-
-
+    def move_robot(self, x, y):
+        if self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt"):
+            self.canvas.delete(self.robot)
+            self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
+            self.way.pop()
+        elif self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_2.txt"):
+            self.canvas.delete(self.robot)
+            self.robot = self.canvas.create_oval((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill ="blue")
+            self.way.pop()
+    def go_robot(self, way):
+        #disable buttons -> need to do
+        #checks if it is walkable -> need to do
+        x = way[0][0]
+        y = way[1][1]
+        self.window.after(1000, self.move_robot(int(x), int(y)))
             
             
 
