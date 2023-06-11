@@ -60,7 +60,9 @@ class Maze:
             self.warning_txt.destroy()
         if self.robot != None:
              self.canvas.delete(self.robot)
-        if self.input_x.get()!= "" and self.input_y.get() != "":
+        try:
+            int(self.input_x.get())
+            int(self.input_y.get())
             if int(self.input_x.get()) != 0:
                 x = int(self.input_x.get())-1
             else:
@@ -78,7 +80,8 @@ class Maze:
             else:
                 if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "blue")
-                
+        except ValueError:
+            self.error("Please input numbers")    
              
     def select_lvl(self):
         if self.error_txt != None:
@@ -160,7 +163,6 @@ class Maze:
                 elif self.lvl[position.pos[1]][position.pos[0]+x] != "1":
                     way = Node([position.pos[0]+x, position.pos[1]])
                     way.parent = position
-                    print(way.pos)
                     if way.pos not in self.memory:
                         self.memory.append(way.pos)
                         self.queue.append(way)
@@ -223,6 +225,8 @@ class Maze:
         self.button["state"] = DISABLED
         self.exit["state"] = DISABLED
         self.lvl_button["state"] = DISABLED
+        self.play_again_but = None
+        self.exit_button = None
         #checks if it is walkable -> need to do
         if self.lvl != None:
             if self.input_x.get() != "" and self.input_y.get() != "":
@@ -257,14 +261,14 @@ class Maze:
         self.window.update()
         self.congrats = Label(self.window, text = "CONGRATULATIONS", fg = "green", font = "Helvetica 25 bold")
         self.congrats.place(x = 80, y = 150, width = 400, height = 100)
-        self.play_again = Button(self.window, text = "Play again", command = self.play_again)
-        self.play_again.place(x = 225, y = 260, width = 100, height = 40)
+        self.play_again_but = Button(self.window, text = "Play again", command = self.play_again)
+        self.play_again_but.place(x = 225, y = 260, width = 100, height = 40)
         self.exit_button = Button(self.window, text = "Quit game", command= self.window.destroy)
         self.exit_button.place(x = 235, y = 310, width = 80, height = 40)
 
     def play_again(self):
         self.congrats.destroy()
-        self.play_again.destroy()
+        self.play_again_but.destroy()
         self.exit_button.destroy()
         self.start_program_button["state"] = NORMAL
         self.button["state"] = NORMAL
