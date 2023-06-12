@@ -81,7 +81,7 @@ class Maze:
                 if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "blue")
         except ValueError:
-            self.error("Please input numbers")    
+            self.error("Please input numbers whole numbers")    
              
     def select_lvl(self):
         if self.error_txt != None:
