@@ -288,7 +288,6 @@ class Maze:
                 x = None
                 y = None
                 self.window.after(600, self.walk)
-                self.window.update()
             except IndexError:
                 x = (self.place[0]-self.previous[0])*40
                 y = (self.place[1]-self.previous[1])*40
@@ -304,23 +303,26 @@ class Maze:
         #checks if it is walkable -> need to do
         if self.lvl != None:
             if self.input_x.get() != "" and self.input_y.get() != "":
-                if self.lvl[int(self.input_y.get())-1][int(self.input_x.get())-1] != "1":
-                        try:
-                            self.disable_edit()
-                            self.way = self.find_end()
-                            self.previous = self.way.pop()
-                            self.place = self.way.pop()
-                            self.walk()
-                        except IndexError:
-                            self.enable_edit()
-                            self.error("Robot can't reach end")
+                if self.lvl[int(self.input_y.get())-1][int(self.input_x.get())-1] != "2":
+                    if self.lvl[int(self.input_y.get())-1][int(self.input_x.get())-1] != "1":
+                            try:
+                                self.disable_edit()
+                                self.way = self.find_end()
+                                self.previous = self.way.pop()
+                                self.place = self.way.pop()
+                                self.walk()
+                            except IndexError:
+                                self.enable_edit()
+                                self.error("Robot can't reach end")
+                    else:
+                        self.error("Do not place robot on wall")
                 else:
-                    self.error("Do not place robot on wall")
+                    self.error("Don' place robot on end")
             else:
                 self.error("Put both coordinates")
         else:
-            self.error("select level")
-        
+            self.error("select level")  
+    
     
     def error(self, text):
         if self.error_txt != None:
