@@ -72,13 +72,10 @@ class Maze:
             else:
                 y = int(self.input_y.get())
             if self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_1.txt"):
-                if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+200, (40*y)+120, 40*(x+1)+200, 40*(y+1)+120, fill = "blue")
             elif self.lvl == Translator().return_maze(r"C:\Users\Administrator\Desktop\pogromovani\VSCode\maze_repository\LVL_2.txt"):
-                if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+130, (40*y)+80, 40*(x+1)+130, 40*(y+1)+80, fill ="blue")
             else:
-                if self.lvl[y][x] == "0":
                     self.robot = self.canvas.create_oval((40*x)+50, (40*y)+30, 40*(x+1)+50, 40*(y+1)+30, fill = "blue")
         except ValueError:
             self.error("Please input numbers whole numbers")    
