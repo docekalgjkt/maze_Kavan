@@ -63,11 +63,11 @@ class Maze:
         try:
             int(self.input_x.get())
             int(self.input_y.get())
-            if int(self.input_x.get()) != 0:
+            if int(self.input_x.get()) >= 0 and int(self.input_x.get()) != 0:
                 x = int(self.input_x.get())-1
             else:
                 x = int(self.input_x.get())
-            if int(self.input_y.get()) != 0:
+            if  int(self.input_y.get()) >= 0  and int(self.input_y.get()) != 0:
                 y = int(self.input_y.get())-1
             else:
                 y = int(self.input_y.get())
